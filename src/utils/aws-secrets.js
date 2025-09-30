@@ -74,12 +74,12 @@ class AWSSecretsManager {
   }
 
   async getConfig() {
-    const secrets = await this.getSecretValue();
+    const databaseUrl = await this.getDatabaseURL();
     const jwtSecret = await this.getJWTSecret();
 
     // PORT is handled as a direct environment variable, not stored in secrets
     return {
-      ...secrets,
+      DATABASE_URL: databaseUrl,
       JWT_SECRET: jwtSecret,
       PORT: process.env.PORT || '3000'
     };
