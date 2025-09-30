@@ -14,7 +14,8 @@ const path = require('path');
   try {
     console.log('🔧 Setting up environment variables for Prisma...');
 
-    const isLocal = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'aws';
+    const nodeEnv = process.env.NODE_ENV || 'development';
+    const isLocal = nodeEnv !== 'production' && nodeEnv !== 'aws';
 
     if (isLocal) {
       console.log('📝 Local environment detected - using existing .env file');
