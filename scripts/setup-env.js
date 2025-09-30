@@ -27,14 +27,17 @@ const path = require('path');
     // Get DATABASE_URL from AWS Secrets Manager
     const databaseUrl = await awsSecrets.getDatabaseURL();
 
-    // Write to .env file for Prisma CLI
+    // Set as environment variable for current process
+    process.env.DATABASE_URL = databaseUrl;
+
+    // Write to .env file for Prisma CLI (backup method)
     const envPath = path.join(__dirname, '..', '.env');
     const envContent = `DATABASE_URL="${databaseUrl}"\n`;
 
     fs.writeFileSync(envPath, envContent, { encoding: 'utf8' });
 
-    console.log('✅ .env file created successfully with DATABASE_URL');
-    console.log('✅ Prisma CLI can now read DATABASE_URL from .env');
+    console.log('✅ DATABASE_URL configured successfully');
+    console.log('✅ Environment variable set and .env file created');
 
   } catch (error) {
     console.error('❌ Failed to setup environment:', error.message);
