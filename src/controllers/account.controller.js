@@ -12,7 +12,16 @@ const getAccount = async (req, res) => {
 
     res.status(200).json(account);
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [getAccount] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId
+    });
+    res.status(500).json({
+      error: 'Failed to retrieve account',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -42,7 +51,17 @@ const createAccount = async (req, res) => {
 
     res.status(201).json(account);
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [createAccount] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      data: { name, balance }
+    });
+    res.status(500).json({
+      error: 'Failed to create account',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -65,7 +84,17 @@ const updateAccount = async (req, res) => {
 
     res.status(200).json({ message: 'Account updated successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [updateAccount] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      data: { name }
+    });
+    res.status(500).json({
+      error: 'Failed to update account',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 

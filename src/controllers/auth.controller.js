@@ -43,7 +43,16 @@ const register = async (req, res) => {
     const { password: _, ...userWithoutPassword } = user;
     res.status(201).json(userWithoutPassword);
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [register] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      email: email
+    });
+    res.status(500).json({
+      error: 'Failed to register user',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -71,7 +80,16 @@ const login = async (req, res) => {
 
     res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [login] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      email: email
+    });
+    res.status(500).json({
+      error: 'Failed to login',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 

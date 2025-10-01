@@ -7,7 +7,16 @@ const getCategories = async (req, res) => {
     });
     res.status(200).json(categories);
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [getCategories] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId
+    });
+    res.status(500).json({
+      error: 'Failed to retrieve categories',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -32,7 +41,17 @@ const createCategory = async (req, res) => {
     });
     res.status(201).json(category);
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [createCategory] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      data: { name, type }
+    });
+    res.status(500).json({
+      error: 'Failed to create category',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -64,7 +83,18 @@ const updateCategory = async (req, res) => {
 
     res.status(200).json(updatedCategory);
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [updateCategory] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      categoryId: id,
+      data: { name, type }
+    });
+    res.status(500).json({
+      error: 'Failed to update category',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -86,7 +116,17 @@ const deleteCategory = async (req, res) => {
 
     res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [deleteCategory] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      categoryId: id
+    });
+    res.status(500).json({
+      error: 'Failed to delete category',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 

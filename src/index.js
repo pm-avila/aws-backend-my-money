@@ -1,25 +1,29 @@
 const express = require('express');
 const cors = require('cors');
 const awsSecrets = require('./utils/aws-secrets');
-const authRoutes = require('./routes/auth.routes');
-const accountRoutes = require('./routes/account.routes');
-const categoryRoutes = require('./routes/category.routes');
-const transactionRoutes = require('./routes/transaction.routes');
 
-// Initialize AWS secrets or local .env
+// Initialize AWS secrets or local .env BEFORE importing routes
 (async () => {
   try {
-    console.log('Initializing application configuration...');
+    console.log('🔧 Initializing application configuration...');
 
-    // Load configuration from AWS Secrets Manager or .env
+    // CRITICAL: Load configuration from AWS Secrets Manager or .env FIRST
     const config = await awsSecrets.getConfig();
 
-    // Set environment variables from secrets
+    // Set environment variables BEFORE importing routes (which may use Prisma)
     process.env.DATABASE_URL = config.DATABASE_URL;
     process.env.JWT_SECRET = config.JWT_SECRET;
     // PORT is handled as direct environment variable, not from secrets
 
-    console.log(`Configuration loaded from: ${process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'aws' ? 'AWS Secrets Manager' : 'local .env'}`);
+    console.log(`✅ Configuration loaded from: ${process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'aws' ? 'AWS Secrets Manager' : 'local .env'}`);
+    console.log(`📊 DATABASE_URL: ${process.env.DATABASE_URL ? 'configured' : 'MISSING'}`);
+    console.log(`🔐 JWT_SECRET: ${process.env.JWT_SECRET ? 'configured' : 'MISSING'}`);
+
+    // NOW import routes (after DATABASE_URL is set)
+    const authRoutes = require('./routes/auth.routes');
+    const accountRoutes = require('./routes/account.routes');
+    const categoryRoutes = require('./routes/category.routes');
+    const transactionRoutes = require('./routes/transaction.routes');
 
     const app = express();
 

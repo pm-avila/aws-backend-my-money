@@ -32,7 +32,17 @@ const getTransactions = async (req, res) => {
       currentPage: parseInt(page),
     });
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [getTransactions] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      pagination: { page, limit }
+    });
+    res.status(500).json({
+      error: 'Failed to retrieve transactions',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -89,7 +99,17 @@ const createTransaction = async (req, res) => {
 
     res.status(201).json(result);
   } catch (error) {
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [createTransaction] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      data: { amount, type, categoryId, date }
+    });
+    res.status(500).json({
+      error: 'Failed to create transaction',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -155,7 +175,18 @@ const updateTransaction = async (req, res) => {
     if (error.message === 'Transaction not found') {
       return res.status(404).json({ error: 'Transaction not found' });
     }
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [updateTransaction] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      transactionId: id,
+      data: { amount, type, categoryId, date }
+    });
+    res.status(500).json({
+      error: 'Failed to update transaction',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
@@ -198,7 +229,17 @@ const deleteTransaction = async (req, res) => {
     if (error.message === 'Transaction not found') {
       return res.status(404).json({ error: 'Transaction not found' });
     }
-    res.status(500).json({ error: 'Something went wrong' });
+    console.error('❌ [deleteTransaction] Database error:', {
+      message: error.message,
+      code: error.code,
+      meta: error.meta,
+      userId: req.userId,
+      transactionId: id
+    });
+    res.status(500).json({
+      error: 'Failed to delete transaction',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };
 
