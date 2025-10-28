@@ -87,7 +87,8 @@ describe('Transaction Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Something went wrong',
+        error: 'Failed to retrieve transactions',
+        details: undefined,
       });
     });
   });
@@ -290,7 +291,8 @@ describe('Transaction Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Something went wrong',
+        error: 'Failed to create transaction',
+        details: undefined,
       });
     });
   });
@@ -530,7 +532,7 @@ describe('Transaction Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Something went wrong',
+        error: 'Failed to delete transaction',
       });
     });
   });

@@ -304,7 +304,7 @@ describe('Transactions API Integration Tests', () => {
         .expect(500);
 
       expect(response.body).toEqual({
-        error: 'Something went wrong',
+        error: 'Failed to create transaction',
       });
     });
   });
@@ -499,7 +499,7 @@ describe('Transactions API Integration Tests', () => {
         .expect(500);
 
       expect(response.body).toEqual({
-        error: 'Something went wrong',
+        error: 'Failed to delete transaction',
       });
     });
   });

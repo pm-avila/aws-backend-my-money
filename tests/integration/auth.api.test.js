@@ -107,7 +107,7 @@ describe('Auth API Integration Tests', () => {
         .expect(500);
 
       expect(response.body).toEqual({
-        error: 'Something went wrong',
+        error: 'Failed to register user',
       });
     });
 
@@ -150,7 +150,7 @@ describe('Auth API Integration Tests', () => {
         .expect(500);
 
       expect(response.body).toEqual({
-        error: 'Something went wrong',
+        error: 'Failed to register user',
       });
     });
   });
@@ -260,7 +260,7 @@ describe('Auth API Integration Tests', () => {
         .expect(500);
 
       expect(response.body).toEqual({
-        error: 'Something went wrong',
+        error: 'Failed to login',
       });
     });
 
@@ -275,7 +275,7 @@ describe('Auth API Integration Tests', () => {
         .expect(500);
 
       expect(response.body).toEqual({
-        error: 'Something went wrong',
+        error: 'Failed to login',
       });
     });
 
@@ -293,7 +293,7 @@ describe('Auth API Integration Tests', () => {
         .expect(500);
 
       expect(response.body).toEqual({
-        error: 'Something went wrong',
+        error: 'Failed to login',
       });
     });
   });

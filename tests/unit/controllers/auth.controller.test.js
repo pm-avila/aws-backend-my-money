@@ -125,20 +125,21 @@ describe('Auth Controller', () => {
 
     it('should return 500 if database error occurs', async () => {
       req.body = validUserData;
-      
+
       mockPrismaClient.user.findUnique.mockRejectedValue(new Error('Database error'));
 
       await register(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Something went wrong',
+        error: 'Failed to register user',
+        details: undefined,
       });
     });
 
     it('should handle bcrypt error gracefully', async () => {
       req.body = validUserData;
-      
+
       mockPrismaClient.user.findUnique.mockResolvedValue(null);
       mockBcrypt.hash.mockRejectedValue(new Error('Bcrypt error'));
 
@@ -146,7 +147,8 @@ describe('Auth Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Something went wrong',
+        error: 'Failed to register user',
+        details: undefined,
       });
     });
   });
@@ -250,20 +252,21 @@ describe('Auth Controller', () => {
 
     it('should return 500 if database error occurs', async () => {
       req.body = validCredentials;
-      
+
       mockPrismaClient.user.findUnique.mockRejectedValue(new Error('Database error'));
 
       await login(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Something went wrong',
+        error: 'Failed to login',
+        details: undefined,
       });
     });
 
     it('should return 500 if bcrypt compare fails', async () => {
       req.body = validCredentials;
-      
+
       const mockUser = global.testHelpers.createMockUser();
       mockPrismaClient.user.findUnique.mockResolvedValue(mockUser);
       mockBcrypt.compare.mockRejectedValue(new Error('Bcrypt error'));
@@ -272,13 +275,14 @@ describe('Auth Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Something went wrong',
+        error: 'Failed to login',
+        details: undefined,
       });
     });
 
     it('should return 500 if JWT signing fails', async () => {
       req.body = validCredentials;
-      
+
       const mockUser = global.testHelpers.createMockUser();
       mockPrismaClient.user.findUnique.mockResolvedValue(mockUser);
       mockBcrypt.compare.mockResolvedValue(true);
@@ -290,7 +294,8 @@ describe('Auth Controller', () => {
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({
-        error: 'Something went wrong',
+        error: 'Failed to login',
+        details: undefined,
       });
     });
   });
