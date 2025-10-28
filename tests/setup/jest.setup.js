@@ -25,7 +25,12 @@ beforeEach(() => {
 const originalError = console.error;
 beforeAll(() => {
   console.error = (...args) => {
+    // Suppress React warnings
     if (args[0]?.includes && args[0].includes('Warning:')) {
+      return;
+    }
+    // Suppress expected error logs from controllers (with ❌ emoji)
+    if (args[0]?.includes && args[0].includes('❌')) {
       return;
     }
     originalError.call(console, ...args);
