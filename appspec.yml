@@ -1,0 +1,30 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /opt/apps/backend/releases/{{deployment_id}}
+
+permissions:
+  - object: /opt/apps/backend/releases
+    owner: appuser
+    group: appuser
+    mode: 755
+
+hooks:
+  BeforeInstall:
+    - location: codedeploy/before_install.sh
+      timeout: 300
+      runas: root
+  AfterInstall:
+    - location: codedeploy/after_install.sh
+      timeout: 600
+      runas: appuser
+  ApplicationStart:
+    - location: codedeploy/application_start.sh
+      timeout: 300
+      runas: appuser
+  ValidateService:
+    - location: codedeploy/validate_service.sh
+      timeout: 120
+      runas: root

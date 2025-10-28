@@ -1,0 +1,70 @@
+name: Deploy Backend (CodeDeploy Blue/Green)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+# -----------------------------
+# Configuração centralizada
+# Preencha em Settings → Secrets and variables → Actions
+# -----------------------------
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}                        # ex: us-east-1
+  ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }}         # ex: arn:aws:iam::123456789012:role/GitHubActionsRole
+  ARTIFACT_BUCKET: ${{ vars.ARTIFACT_BUCKET }}              # ex: my-money-artifacts
+  APP_NAME: ${{ vars.APP_NAME }}                            # ex: my-money-backend
+  CODEDEPLOY_APP: ${{ vars.CODEDEPLOY_APP }}                # ex: MyMoneyApp
+  CODEDEPLOY_GROUP: ${{ vars.CODEDEPLOY_GROUP }}            # ex: MyMoney-BlueGreen
+  # chave (path) do artefato no S3, já combinando app + sha
+  ARTIFACT_KEY: ${{ vars.APP_NAME }}/backend-${{ github.sha }}.tgz
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install & test
+        run: |
+          npm ci
+          npm test --if-present
+
+      - name: Build artifact
+        run: |
+          tar -czf artifact.tgz --exclude='.git' --exclude='node_modules' .
+
+      - name: Configure AWS creds (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Upload artifact to S3
+        run: |
+          aws s3 cp artifact.tgz "s3://${{ env.ARTIFACT_BUCKET }}/${{ env.ARTIFACT_KEY }}"
+
+      - name: Register application revision (CodeDeploy)
+        run: |
+          aws deploy register-application-revision \
+            --application-name "${{ env.CODEDEPLOY_APP }}" \
+            --s3-location bucket="${{ env.ARTIFACT_BUCKET }}",key="${{ env.ARTIFACT_KEY }}",bundleType=tgz
+
+      - name: Create deployment (CodeDeploy Blue/Green)
+        run: |
+          aws deploy create-deployment \
+            --application-name "${{ env.CODEDEPLOY_APP }}" \
+            --deployment-group-name "${{ env.CODEDEPLOY_GROUP }}" \
+            --s3-location bucket="${{ env.ARTIFACT_BUCKET }}",key="${{ env.ARTIFACT_KEY }}",bundleType=tgz \
+            --description "Deployment ${{ github.sha }}"

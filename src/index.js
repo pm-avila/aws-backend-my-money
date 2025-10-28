@@ -20,6 +20,7 @@ const awsSecrets = require('./utils/aws-secrets');
     console.log(`🔐 JWT_SECRET: ${process.env.JWT_SECRET ? 'configured' : 'MISSING'}`);
 
     // NOW import routes (after DATABASE_URL is set)
+    const healthRoutes = require('./routes/health.routes');
     const authRoutes = require('./routes/auth.routes');
     const accountRoutes = require('./routes/account.routes');
     const categoryRoutes = require('./routes/category.routes');
@@ -38,6 +39,9 @@ const awsSecrets = require('./utils/aws-secrets');
     app.get('/', (req, res) => {
       res.send('My Money Backend API');
     });
+
+    // Health check route for AWS Load Balancer (no auth required)
+    app.use('/health', healthRoutes);
 
     app.use('/api/auth', authRoutes);
     app.use('/api/account', accountRoutes);
