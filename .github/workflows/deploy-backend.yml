@@ -43,15 +43,15 @@ jobs:
 
       - name: Build artifact
         run: |
-          tar -czf artifact.tgz \
+          tar -czf /tmp/artifact.tgz \
             --exclude='.git' \
             --exclude='node_modules' \
-            --exclude='artifact.tgz' \
             --exclude='coverage' \
             --exclude='.env' \
             --exclude='.env.example' \
             --exclude='__tests__' \
             .
+          mv /tmp/artifact.tgz .
 
       - name: Configure AWS creds (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
