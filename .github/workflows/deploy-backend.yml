@@ -39,7 +39,7 @@ jobs:
       - name: Install & test
         run: |
           npm ci
-          npm test --if-present
+          npm test -- --coverage=false
 
       - name: Build artifact
         run: |
