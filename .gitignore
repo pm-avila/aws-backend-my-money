@@ -6,3 +6,7 @@ npm-debug.log
 *.log
 .DS_Store
 CLAUDE.md
+
+# PM2 logs
+logs/
+.pm2/
