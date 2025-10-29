@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     await prisma.$queryRaw`SELECT 1`;
 
     res.status(200).json({
-      status: 'healthy OK',
+      status: 'healthy Ok',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       database: 'connected'
