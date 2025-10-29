@@ -6,6 +6,10 @@ CURRENT_LINK="/opt/apps/backend/current"
 
 ln -sfn "$APP_DIR" "$CURRENT_LINK"
 
+# Carregar NVM (este script já roda como appuser conforme appspec.yml)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
 # Iniciar/reiniciar com PM2
-su - appuser -c "source ~/.nvm/nvm.sh && pm2 start $CURRENT_LINK/src/index.js --name meu-backend --update-env --time || pm2 restart meu-backend"
-su - appuser -c "pm2 save"
+pm2 start $CURRENT_LINK/src/index.js --name meu-backend --update-env --time || pm2 restart meu-backend
+pm2 save
