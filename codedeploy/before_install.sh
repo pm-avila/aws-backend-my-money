@@ -1,21 +1,24 @@
 #!/bin/bash
 set -eux
 
+echo "=== BeforeInstall: Preparando ambiente ==="
+
 # Criar usuário appuser se não existir
 if ! id -u appuser >/dev/null 2>&1; then
   useradd -m -s /bin/bash appuser
-  echo "Usuário appuser criado com sucesso"
+  echo "✓ Usuário appuser criado"
+else
+  echo "✓ Usuário appuser já existe"
 fi
 
-# Node via nvm se não existir
-if ! command -v node >/dev/null 2>&1; then
-  su - appuser -c "curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash"
-  su - appuser -c "source ~/.nvm/nvm.sh && nvm install --lts && nvm alias default 'lts/*'"
-fi
+# Verificar se Node.js e PM2 estão disponíveis (instalados no User Data)
+node --version || { echo "✗ Node.js não encontrado"; exit 1; }
+pm2 --version || { echo "✗ PM2 não encontrado"; exit 1; }
+echo "✓ Node.js e PM2 disponíveis"
 
-# Instalar PM2 globalmente para appuser (se ainda não estiver instalado)
-su - appuser -c "source ~/.nvm/nvm.sh && npm list -g pm2 || npm install -g pm2"
-
-# Diretórios padrão
+# Criar estrutura de diretórios
 mkdir -p /opt/apps/backend/{releases,shared,logs}
 chown -R appuser:appuser /opt/apps/backend
+echo "✓ Diretórios criados e permissões ajustadas"
+
+echo "=== BeforeInstall: Concluído ==="
