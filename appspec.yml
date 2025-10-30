@@ -3,10 +3,10 @@ os: linux
 
 files:
   - source: /
-    destination: /opt/apps/backend/current
+    destination: /tmp/codedeploy-app
 
 permissions:
-  - object: /opt/apps/backend/current
+  - object: /tmp/codedeploy-app
     owner: appuser
     group: appuser
     mode: 755

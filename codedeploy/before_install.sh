@@ -30,8 +30,19 @@ else
 fi
 
 # Criar estrutura de diretórios
-mkdir -p /opt/apps/backend/{releases,shared,logs}
+mkdir -p /opt/apps/backend/{current,shared,logs}
+
+# Ajustar permissões ANTES do CodeDeploy copiar arquivos
 chown -R appuser:appuser /opt/apps/backend
+chmod -R 755 /opt/apps/backend
 echo "✓ Diretórios criados e permissões ajustadas"
+
+# Se o diretório current já existe, limpar conteúdo antigo (exceto logs)
+if [ -d "/opt/apps/backend/current" ]; then
+  echo "Limpando diretório current (mantendo logs)..."
+  cd /opt/apps/backend/current
+  find . -mindepth 1 -maxdepth 1 ! -name 'logs' -exec rm -rf {} + 2>/dev/null || true
+  echo "✓ Diretório limpo"
+fi
 
 echo "=== BeforeInstall: Concluído ==="
