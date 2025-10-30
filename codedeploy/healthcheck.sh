@@ -7,7 +7,7 @@ APP_NAME="meu-backend"
 MAX_RETRIES=30
 RETRY_DELAY=2
 
-echo "==== Iniciando validação completa dos serviços ===="
+echo "===== Iniciando validação completa dos serviços ====="
 
 # Função para verificar se o serviço HTTP está respondendo
 check_http_health() {
