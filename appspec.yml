@@ -3,15 +3,22 @@ os: linux
 
 files:
   - source: /
-    destination: /opt/apps/backend/releases/{{deployment_id}}
+    destination: /opt/apps/backend/current
 
 permissions:
-  - object: /opt/apps/backend/releases
+  - object: /opt/apps/backend/current
     owner: appuser
     group: appuser
     mode: 755
+    type:
+      - directory
+      - file
 
 hooks:
+  ApplicationStop:
+    - location: codedeploy/application_stop.sh
+      timeout: 300
+      runas: appuser
   BeforeInstall:
     - location: codedeploy/before_install.sh
       timeout: 300

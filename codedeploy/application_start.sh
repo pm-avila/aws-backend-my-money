@@ -3,28 +3,26 @@ set -eux
 
 echo "=== ApplicationStart: Iniciando aplicação ==="
 
-APP_DIR="/opt/apps/backend/releases/{{deployment_id}}"
-CURRENT_LINK="/opt/apps/backend/current"
+# Diretório da aplicação (definido pelo appspec.yml)
+APP_DIR="/opt/apps/backend/current"
 SECRET_NAME="${SECRET_NAME:-money2-backend-dev-secret-rds}"
 AWS_REGION="${AWS_REGION:-us-east-1}"
 
-# Criar symlink para o release atual
-ln -sfn "$APP_DIR" "$CURRENT_LINK"
-echo "✓ Symlink criado: $CURRENT_LINK -> $APP_DIR"
+echo "✓ Usando diretório: $APP_DIR"
 
 # Verificar PM2 disponível (script roda como appuser)
 pm2 --version || { echo "✗ PM2 não encontrado"; exit 1; }
 echo "✓ PM2 disponível"
 
 # Verificar se ecosystem.config.js existe
-if [ ! -f "$CURRENT_LINK/ecosystem.config.js" ]; then
+if [ ! -f "$APP_DIR/ecosystem.config.js" ]; then
   echo "✗ Arquivo ecosystem.config.js não encontrado"
   exit 1
 fi
 echo "✓ Arquivo ecosystem.config.js encontrado"
 
 # Criar diretório de logs se não existir
-mkdir -p "$CURRENT_LINK/logs"
+mkdir -p "$APP_DIR/logs"
 echo "✓ Diretório de logs criado"
 
 # Buscar JWT_SECRET do AWS Secrets Manager
@@ -61,7 +59,14 @@ echo "✓ Processos PM2 antigos removidos"
 
 # Iniciar aplicação com PM2 usando ecosystem.config.js
 echo "Iniciando aplicação com ecosystem.config.js..."
-cd "$CURRENT_LINK"
+cd "$APP_DIR"
+
+# Verificar se JWT_SECRET foi carregado
+if [ -z "$JWT_SECRET" ]; then
+  echo "⚠️  AVISO: JWT_SECRET não foi carregado!"
+fi
+
+# PM2 herdará as variáveis de ambiente do shell (incluindo JWT_SECRET)
 pm2 start ecosystem.config.js --update-env
 
 # Salvar configuração do PM2

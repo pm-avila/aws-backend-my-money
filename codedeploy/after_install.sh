@@ -3,7 +3,8 @@ set -eux
 
 echo "=== AfterInstall: Instalando dependências ==="
 
-DEPLOY_DIR="/opt/apps/backend/releases/{{deployment_id}}"
+# Diretório da aplicação (definido pelo appspec.yml)
+DEPLOY_DIR="/opt/apps/backend/current"
 cd "$DEPLOY_DIR"
 
 # Verificar Node.js disponível (script roda como appuser)
