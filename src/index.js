@@ -15,7 +15,7 @@ const awsSecrets = require('./utils/aws-secrets');
     process.env.JWT_SECRET = config.JWT_SECRET;
     // PORT is handled as direct environment variable, not from secrets
 
-    console.log(`✅ Configuration loaded from: ${process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'aws' ? 'AWS Secrets Manager' : 'local .env'}`);
+    console.log(`✅ Configurations loaded from: ${process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'aws' ? 'AWS Secrets Manager' : 'local .env'}`);
     console.log(`📊 DATABASE_URL: ${process.env.DATABASE_URL ? 'configured' : 'MISSING'}`);
     console.log(`🔐 JWT_SECRET: ${process.env.JWT_SECRET ? 'configured' : 'MISSING'}`);
 
