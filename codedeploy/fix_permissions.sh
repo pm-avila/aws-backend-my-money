@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "==== FixPermissions: Corrigindo permissões recursivamente ===="
+echo "=== FixPermissions: Corrigindo permissões recursivamente ==="
 
 TEMP_DIR="/tmp/codedeploy-app"
 
