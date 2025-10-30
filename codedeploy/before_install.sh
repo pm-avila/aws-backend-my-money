@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-echo "=== BeforeInstall: Preparando ambiente ==="
+echo "==== BeforeInstall: Preparando ambiente ===="
 
 # Criar usuário appuser se não existir
 if ! id -u appuser >/dev/null 2>&1; then
