@@ -46,7 +46,13 @@ fi
 echo "✓ Arquivos movidos para $TARGET_DIR"
 
 # Limpar diretório temporário
-rm -rf "$TEMP_DIR"
+# Agora funciona porque fix_permissions.sh já ajustou as permissões
+echo "Limpando diretório temporário..."
+if rm -rf "$TEMP_DIR"; then
+  echo "✓ Diretório temporário limpo com sucesso"
+else
+  echo "⚠️  Aviso: Não foi possível limpar completamente $TEMP_DIR (não fatal)"
+fi
 
 cd "$TARGET_DIR"
 

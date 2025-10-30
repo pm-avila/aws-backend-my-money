@@ -24,6 +24,9 @@ hooks:
       timeout: 300
       runas: root
   AfterInstall:
+    - location: codedeploy/fix_permissions.sh
+      timeout: 60
+      runas: root
     - location: codedeploy/after_install.sh
       timeout: 600
       runas: appuser
