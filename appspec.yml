@@ -37,4 +37,4 @@ hooks:
   ValidateService:
     - location: codedeploy/validate_service.sh
       timeout: 120
-      runas: root
+      runas: appuser
