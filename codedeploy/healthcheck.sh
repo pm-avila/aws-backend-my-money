@@ -15,7 +15,7 @@ check_http_health() {
   return 0
 }
 
-# Função para verificar se PM2 está rodando o processo
+### Função para verificar se PM2 está rodando o processo
 check_pm2_health() {
   # Verificar se PM2 está instalado
   if ! command -v pm2 >/dev/null 2>&1; then
