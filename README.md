@@ -1,4 +1,4 @@
-# aws-backend-my-money2
+# aws-backend-my-money
 Simplify personal financial control through a complete web solution, enabling organized and visual tracking of income, expenses, and current account balances.
 
 ## 📋 Step-by-Step Guide - Running the My Money Backend Application
